@@ -5,5 +5,5 @@ from .views import *
 
 
 urlpatterns = [
-    path('', login_required(IndexView.as_view()), name='index'),
+    path('', IndexView.as_view(), name='index'),
 ]
