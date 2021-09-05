@@ -69,10 +69,12 @@ SOCIAL_AUTH_VK_OAUTH2_KEY = os.getenv('VK_KEY')
 SOCIAL_AUTH_VK_OAUTH2_SECRET = os.getenv('VK_SECRET')
 
 
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS = [
     'social_core.backends.github.GithubOAuth2',
     'social_core.backends.vk.VKOAuth2',
-)
+
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 
 # Mail settings

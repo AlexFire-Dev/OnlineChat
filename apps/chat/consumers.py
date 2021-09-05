@@ -68,19 +68,20 @@ class GuildConsumer(AsyncWebsocketConsumer):
                     }
                 )
 
-        # elif action == 'delete':
-        #     message_id = text_data_json.get('message_id')
-        #     result = await self.delete_message(message_id=message_id)
-        #
-        #     if result:
-        #         await self.channel_layer.group_send(
-        #             self.guild_room_name,
-        #             {
-        #                 'type': 'chat_message_delete',
-        #                 'message_id': message_id,
-        #             }
-        #         )
-        #
+        elif action == 'delete':
+            message_id = text_data_json.get('message_id')
+            result = await self.delete_message(message_id=message_id)
+
+            if result:
+                await self.channel_layer.group_send(
+                    self.guild_room_name,
+                    {
+                        'type': 'chat_message_delete',
+                        'channel': channel_id,
+                        'message_id': message_id,
+                    }
+                )
+
         # elif action == 'clear':
         #     limit = int(text_data_json.get('limit'))
         #     ids = await self.delete_messages(limit)
@@ -127,19 +128,20 @@ class GuildConsumer(AsyncWebsocketConsumer):
             },
         }))
 
-    # async def chat_message_delete(self, event):
-    #     message_id = event['message_id']
-    #
-    #     await self.send(text_data=json.dumps({
-    #         'action': 'delete',
-    #         'message': {
-    #             'id': message_id,
-    #         },
-    #         'guild': {
-    #             'id': self.guild_id,
-    #         },
-    #     }))
-    #
+    async def chat_message_delete(self, event):
+        message_id = event['message_id']
+
+        await self.send(text_data=json.dumps({
+            'action': 'delete',
+            'message': {
+                'id': message_id,
+            },
+            'channel': event['channel'],
+            'guild': {
+                'id': self.guild_id,
+            },
+        }))
+
     # async def chat_member_joined(self, event):
     #     await self.send(text_data=json.dumps({
     #         'action': 'joined',
@@ -190,19 +192,19 @@ class GuildConsumer(AsyncWebsocketConsumer):
         except:
             return None, None, False
 
-    # @database_sync_to_async
-    # def delete_message(self, message_id):
-    #     try:
-    #         message = Message.objects.get(id=message_id)
-    #         member = self.scope['member']
-    #     except:
-    #         return False
-    #
-    #     if message.author.user == self.scope['user'] or member.is_admin():
-    #         message.delete()
-    #         return True
-    #     return False
-    #
+    @database_sync_to_async
+    def delete_message(self, message_id):
+        try:
+            message = Message.objects.get(id=message_id)
+            member = self.scope['member']
+        except:
+            return False
+
+        if message.author.user == self.scope['user'] or member.admin:
+            message.delete()
+            return True
+        return False
+
     # @database_sync_to_async
     # def delete_messages(self, limit: int):
     #     ids = []

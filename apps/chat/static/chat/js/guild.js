@@ -84,25 +84,10 @@ guildSocket.onmessage = function (e) {
             `</footer>` +
             `</div>`;
         feed.scrollTop = feed.scrollHeight
+    } else if (data.action === 'delete' && data.channel === channelId) {
+        const feed = document.querySelector(`#feed`);
+        document.getElementById(`id_${data.message.id}`).remove();
     }
-    // else if (data.action === 'delete') {
-    //     const feed = document.querySelector(`#feed`);
-    //     document.getElementById(`id_${data.message.id}`).remove();
-    //
-    //     if (page > 1 && feed.scrollTop <= 125 && !loading) {
-    //         loading = true;
-    //         page = page - 1;
-    //
-    //         feed.innerHTML =
-    //             loading_html +
-    //             feed.innerHTML;
-    //
-    //         guildSocket.send(JSON.stringify({
-    //             'action': 'load',
-    //             'page_id': page,
-    //         }));
-    //     }
-    // }
     // else if (data.action === 'load') {
     //     const feed = document.querySelector(`#feed`);
     //     let html = '';
@@ -163,12 +148,6 @@ document.querySelector(`#TextMessageButton`).onclick = function (e) {
             'message': message
         }));
     }
-
-    console.log(JSON.stringify({
-        'action': 'send',
-        'channel': channelId,
-        'message': message
-    }))
 
     TextMessageInput.value = '';
 };

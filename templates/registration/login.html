@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+
+{% block buttons_main %}
+    {% include 'sidebar_buttons/home_deactive.html' %}
+{% endblock %}
+
+
+{% block main %}
+    <div class="container">
+        <div class="main__login">
+            {% if form.errors %}
+                <div style="margin-top: 10px; margin-bottom: 20px">
+                    <span style="color: red; font-weight: bold">Пожалуйста, введите правильные имя пользователя / email и пароль.</span><br>
+                    <span style="color: red; font-weight: bold">Оба поля могут быть чувствительны к регистру.</span>
+                </div>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                <p style="margin-top: 15px" class="header__profile__bio">Вы уже вошли в свой аккаунт!</p>
+                <a style="text-decoration: none" href="{% url 'index' %}">Нажмите для возвращения на главную</a>
+            {% else %}
+                <form style="margin-top: 15px" method="post" action="{% url 'login' %}">
+                    <h2 style="margin-bottom: 20px">Вход</h2>
+                    {% csrf_token %}
+                    {% with '300px' as width %}
+                        {% include 'forms/form_field_text.html' with label='Имя пользователя' name=form.username.name help_text=form.username.help_text errors=form.username.errors autocomplete='username' %}
+                        <br>
+                        {% include 'forms/form_field_password.html' with label=form.password.label name=form.password.name help_text=form.password.help_text errors=form.password.errors %}
+                        <br>
+                    {% endwith %}
+
+                    <div style="display: flex; flex-direction: column">
+                        <div><button type="submit" class="btn btn-primary">Войти</button></div>
+                        <div style="margin-top: 42px">
+                            <a href="{% url 'social:begin' 'github' %}" class="btn btn-block btn-social btn-github">
+                                <span class="fa fa-github"></span> Sign in with Github
+                            </a>
+                        </div>
+
+                        {# Assumes you setup the password_reset view in your URLconf #}
+                        <a style="font-weight: bold; text-decoration: none; margin-top: 21px" href="{% url 'password_reset' %}">Забыли пароль?</a>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

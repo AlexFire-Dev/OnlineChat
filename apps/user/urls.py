@@ -3,15 +3,20 @@ import django.contrib.auth.views as django_views
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from django.urls import path, reverse_lazy, include
+from django_registration.backends.activation.views import RegistrationView
 
 from .views import *
+from .forms import RegisterForm
 
 
 urlpatterns = [
     url('', include('social_django.urls', namespace='social')),
     path('api-auth/', include('rest_framework.urls')),
 
-    path('login/', LoginView.as_view(), name='login'),
+    path('register/', RegistrationView.as_view(form_class=RegisterForm, success_url=reverse_lazy('django_registration_complete')), name='register'),
+    path('', include('django_registration.backends.activation.urls')),
+
+    path('login/', django_views.LoginView.as_view(), name='login'),
     path('logout/', django_views.LogoutView.as_view(), name='logout'),
 
     path('password_change/', django_views.PasswordChangeView.as_view(), name='password_change'),

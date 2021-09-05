@@ -12,5 +12,4 @@ from django.views.generic import TemplateView, CreateView, UpdateView, RedirectV
 from .models import *
 
 
-class LoginView(TemplateView):
-    template_name = 'user/login.html'
+pass
