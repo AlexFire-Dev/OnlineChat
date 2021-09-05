@@ -52,3 +52,23 @@ class GuildView(TemplateView):
             'messages': messages,
         })
         return context
+
+
+class GuildCreateView(CreateView):
+    form_class = CreateGuildForm
+    template_name = 'chat/guild_create.html'
+
+    def form_valid(self, form):
+        name = form.cleaned_data.get('name', f'Сервер {self.request.user.username}')
+
+        args = {
+            'name': name,
+            'creator': self.request.user,
+            'poster': self.request.FILES.get('poster'),
+        }
+        guild = Guild.objects.create(**args)
+        Member.objects.create(guild=guild, user=self.request.user, admin=True)
+        Channel.objects.create(guild=guild, name='Основной')
+
+        return HttpResponseRedirect(reverse_lazy('guild-chat', args=[guild.id]))
+
