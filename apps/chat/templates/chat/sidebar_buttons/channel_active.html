@@ -1,0 +1,13 @@
+{% load static %}
+
+<li>
+    <a href="?channel={{ channel.id }}" class="nav-link active">
+        <img
+                width="16" height="16"
+                class="me-2"
+                src="{% static 'chat/images/channel.svg' %}"
+                alt="channel"
+        />
+        {{ channel.name }}
+    </a>
+</li>

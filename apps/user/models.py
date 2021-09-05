@@ -44,3 +44,13 @@ class User(AbstractUser):
 class Bot(models.Model):
     account = models.OneToOneField(User, on_delete=models.CASCADE, related_name='this_bot')
     master = models.ForeignKey(User, on_delete=models.PROTECT, related_name='bots')
+
+
+class Friend(models.Model):
+    account = models.ForeignKey(User, on_delete=models.PROTECT, related_name='friends_by_me')
+    friend = models.ForeignKey(User, on_delete=models.PROTECT, related_name='friends')
+
+
+class FriendInvitation(models.Model):
+    account = models.ForeignKey(User, on_delete=models.PROTECT, related_name='future_friends_by_me')
+    future_friend = models.ForeignKey(User, on_delete=models.PROTECT, related_name='future_friends')

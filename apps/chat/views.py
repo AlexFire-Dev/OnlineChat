@@ -15,3 +15,40 @@ from .forms import *
 
 class IndexView(TemplateView):
     template_name = 'chat/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        membership = Member.objects.filter(user=self.request.user, active=True, banned=False).order_by('id')
+
+        context.update({
+            'membership': membership,
+        })
+        return context
+
+
+class GuildView(TemplateView):
+    template_name = 'chat/guild.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        guild = get_object_or_404(Guild, id=kwargs.get('guild'))
+        member = get_object_or_404(Member, user=self.request.user, guild=guild, active=True, banned=False)
+        channel_id = self.request.GET.get('channel')
+        guild_channels = Channel.objects.filter(guild=guild)
+
+        if channel_id:
+            channel = get_object_or_404(guild_channels, id=channel_id)
+        else:
+            channel = guild_channels.first()
+        messages = Message.objects.filter(channel=channel)
+
+        context.update({
+            'guild': guild,
+            'member': member,
+            'current_channel': channel,
+            'channels': guild_channels,
+            'messages': messages,
+        })
+        return context

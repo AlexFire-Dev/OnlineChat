@@ -1,0 +1,15 @@
+{% load static %}
+
+
+<div id="id_{{ message.id }}" class="card text-center" style="margin-top: 15px">
+    <header class="card-header" style="display: flex; flex-direction: {% if message.author.user == user %}row-reverse{% else %}row{% endif %}; flex-grow: 1; justify-content: space-between; align-items: center">
+        <span style="font-weight: bold">{% if message.author.user.get_full_name %}{{ message.author.user.get_full_name }}{% else %}{{ message.author.user.username }}{% endif %}</span>
+        {% if message.author == member or member.is_admin %}<button class="deleteButton" onclick="deleteMessage({{ message.id }})" type="button" href="#"><img src="{% static 'chat/images/delete.svg' %}" alt="delete" width="21px" height="21px"></button>{% endif %}
+    </header>
+    <div class="card-body">
+        <p class="card-text" style="text-align: start">{{ message.text|linebreaksbr }}</p>
+    </div>
+    <footer class="card-footer text-muted" style="display: flex; align-items: flex-start; justify-content: space-between">
+        <span class="text-muted" style="display: flex; font-size: 15px">Создано: <div class="local-time">{{ message.created_at|date:'Y.m.d H:i' }}</div></span>
+    </footer>
+</div>

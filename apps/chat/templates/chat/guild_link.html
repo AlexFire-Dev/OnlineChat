@@ -1,0 +1,15 @@
+{% load static %}
+
+
+<a href="{% url 'guild-chat' id %}" class="card guild-link">
+    <div class="card-body">
+        <div class="guild-link__card">
+            <h2 class="card-title">{{ title }}</h2>
+            {% if poster %}
+                <img class="guild-link__poster" alt="poster" src="{{ poster.url }}">
+            {% else %}
+                <img class="guild-link__no-poster" src="{% static 'chat/images/guild.svg' %}" alt="poster">
+            {% endif %}
+        </div>
+    </div>
+</a>

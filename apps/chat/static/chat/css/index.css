@@ -1,0 +1,26 @@
+.guild-link {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    text-decoration: none
+}
+
+
+.guild-link__card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.guild-link__poster {
+    width: 75px;
+    height: 75px;
+    border-radius: 20%;
+    border: solid rgb(129, 163, 240) 1px;
+}
+
+
+.guild-link__no-poster {
+    width: 75px;
+    height: 75px;
+}

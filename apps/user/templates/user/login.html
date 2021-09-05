@@ -2,16 +2,16 @@
 {% load static %}
 
 
+{% block buttons_main %}
+    {% include 'sidebar_buttons/home_deactive.html' %}
+{% endblock %}
+
+
 {% block main %}
     <div class="container">
         <br>
         <a href="{% url 'social:begin' 'github' %}" class="btn btn-block btn-social btn-github">
             <span class="fa fa-github"></span> Sign in with Github
         </a>
-        <a href="{% url 'social:begin' 'vk-oauth2' %}" class="btn btn-block btn-social btn-vk">
-            <span class="fa fa-vk"></span> Sign in with VK
-        </a>
     </div>
-    <div class="container">
-</div>
 {% endblock %}

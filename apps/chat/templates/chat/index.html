@@ -2,8 +2,13 @@
 {% load static %}
 
 
+{% block styles %}{% static 'chat/css/index.css' %}{% endblock %}
+
+
 {% block main %}
     <div class="container">
-        <p>WORKING!</p>
+        {% for member in membership %}
+            {% include 'chat/guild_link.html' with id=member.guild.id title=member.guild.name poster=member.guild.poster %}
+        {% endfor %}
     </div>
 {% endblock %}
