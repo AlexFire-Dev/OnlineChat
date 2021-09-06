@@ -5,12 +5,6 @@
 {% block title %}{{ guild.name }}{% endblock %}
 
 
-{% block extra-header %}
-    {% if member.is_admin %}<a class="header__controls__link" href="#">Настройки сервера</a>{% endif %}
-    {% if guild.creator != user %}<a class="header__controls__link" href="#">Покинуть сервер</a>{% endif %}
-{% endblock %}
-
-
 {% block styles %}{% static 'chat/css/guild.css' %}{% endblock %}
 
 
@@ -21,12 +15,36 @@
 
 {% block buttons_channels %}
     {% for channel in channels %}
-        {% if channel == current_channel %}
-            {% include 'chat/sidebar_buttons/channel_active.html' with channel=channel %}
+        {% if member.admin %}
+            {% if not channel.private %}
+                {% if channel == current_channel %}
+                    {% include 'chat/sidebar_buttons/channel_active.html' with channel=channel %}
+                {% else %}
+                    {% include 'chat/sidebar_buttons/channel_deactive.html' with channel=channel %}
+                {% endif %}
+            {% else %}
+                {% if channel == current_channel %}
+                    {% include 'chat/sidebar_buttons/private-channel_active.html' with channel=channel %}
+                {% else %}
+                    {% include 'chat/sidebar_buttons/private-channel_deactive.html' with channel=channel %}
+                {% endif %}
+            {% endif %}
         {% else %}
-            {% include 'chat/sidebar_buttons/channel_deactive.html' with channel=channel %}
+            {% if not channel.private %}
+                {% if channel == current_channel %}
+                    {% include 'chat/sidebar_buttons/channel_active.html' with channel=channel %}
+                {% else %}
+                    {% include 'chat/sidebar_buttons/channel_deactive.html' with channel=channel %}
+                {% endif %}
+            {% endif %}
         {% endif %}
     {% endfor %}
+{% endblock %}
+
+
+{% block dropdown_extra %}
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="{% url 'channel-create' guild.id %}">Создать канал</a></li>
 {% endblock %}
 
 

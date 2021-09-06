@@ -9,5 +9,7 @@ urlpatterns = [
 
     path('guild/<int:guild>/', login_required(GuildView.as_view()), name='guild-chat'),
 
+    path('guild/<int:guild>/create/', login_required(ChannelCreateView.as_view()), name='channel-create'),
+
     path('guild/create/', login_required(GuildCreateView.as_view()), name='guild-create'),
 ]

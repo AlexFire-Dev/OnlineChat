@@ -36,7 +36,7 @@ class GuildView(TemplateView):
         guild = get_object_or_404(Guild, id=kwargs.get('guild'))
         member = get_object_or_404(Member, user=self.request.user, guild=guild, active=True, banned=False)
         channel_id = self.request.GET.get('channel')
-        guild_channels = Channel.objects.filter(guild=guild)
+        guild_channels = Channel.objects.filter(guild=guild).order_by('id').order_by('private')
 
         if channel_id:
             channel = get_object_or_404(guild_channels, id=channel_id)
@@ -72,3 +72,36 @@ class GuildCreateView(CreateView):
 
         return HttpResponseRedirect(reverse_lazy('guild-chat', args=[guild.id]))
 
+
+class ChannelCreateView(CreateView):
+    form_class = CreateChannelForm
+    template_name = 'chat/channel_create.html'
+
+    def get_success_url(self):
+        return reverse('guild-chat', args=[self.kwargs.get('guild')])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context.update({
+            'guild': get_object_or_404(Guild, id=self.kwargs.get('guild')),
+        })
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        guild = get_object_or_404(Guild, id=self.kwargs.get('guild'))
+        me = get_object_or_404(Member, guild=guild, user=self.request.user, admin=True, active=True, banned=False)
+        if me.user == guild.creator:
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse('guild-chat', args=[self.kwargs.get('guild')]))
+
+    def form_valid(self, form):
+        args = {
+            'name': form.cleaned_data.get('name'),
+            'guild_id': self.kwargs.get('guild'),
+            'private': form.cleaned_data.get('private'),
+        }
+
+        Channel.objects.create(**args)
+        return HttpResponseRedirect(self.get_success_url())

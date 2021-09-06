@@ -60,6 +60,7 @@
                     {% if user.is_authenticated %}
                         <li><a class="dropdown-item" href="#">Профиль</a></li>
                         <li><a class="dropdown-item" href="{% url 'guild-create' %}">Создать сервер</a></li>
+                        {% block dropdown_extra %}{% endblock %}
 
                         <li><hr class="dropdown-divider"></li>
 

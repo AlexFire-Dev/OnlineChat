@@ -43,7 +43,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
 
         if action == 'send':
             message = text_data_json.get('message')
-            message, member, result = await self.create_message(message=message, channel_id=channel_id)
+            message, member, channel, result = await self.create_message(message=message, channel_id=channel_id)
 
             if result:
                 nickname = self.scope['user'].username
@@ -55,7 +55,8 @@ class GuildConsumer(AsyncWebsocketConsumer):
                     self.guild_room_name,
                     {
                         'type': 'chat_message_send',
-                        'channel': channel_id,
+                        'private': channel.private,
+                        'channel': channel.id,
                         'author': {
                             'id': member.id,
                             'nickname': nickname
@@ -110,23 +111,24 @@ class GuildConsumer(AsyncWebsocketConsumer):
         author = event['author']
         message = event['message']
 
-        # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'action': 'send',
-            'author': {
-                'id': author['id'],
-                'nickname': author['nickname'],
-            },
-            'message': {
-                'id': message['id'],
-                'text': message['text'],
-                'created_at': message['created_at'],
-            },
-            'channel': event['channel'],
-            'guild': {
-                'id': self.guild_id,
-            },
-        }))
+        if event['private'] != True or self.scope['member'].admin == True:
+            # Send message to WebSocket
+            await self.send(text_data=json.dumps({
+                'action': 'send',
+                'author': {
+                    'id': author['id'],
+                    'nickname': author['nickname'],
+                },
+                'message': {
+                    'id': message['id'],
+                    'text': message['text'],
+                    'created_at': message['created_at'],
+                },
+                'channel': event['channel'],
+                'guild': {
+                    'id': self.guild_id,
+                },
+            }))
 
     async def chat_message_delete(self, event):
         message_id = event['message_id']
@@ -188,9 +190,9 @@ class GuildConsumer(AsyncWebsocketConsumer):
             channel = Channel.objects.get(id=channel_id)
 
             newMessage = Message.objects.create(author=author, text=message, channel=channel)
-            return newMessage, author, True
+            return newMessage, author, channel, True
         except:
-            return None, None, False
+            return None, None, None, False
 
     @database_sync_to_async
     def delete_message(self, message_id):
