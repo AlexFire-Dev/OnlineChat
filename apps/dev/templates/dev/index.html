@@ -1,0 +1,33 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}OnlineChat-Dev{% endblock %}
+
+
+{% block buttons_main %}
+    {% include 'sidebar_buttons/home_deactive.html' %}
+    {% include 'sidebar_buttons/dev_active.html' %}
+{% endblock %}
+
+
+{% block dropdown_extra %}
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="{% url 'bot-create' %}">Создать бота</a></li>
+{% endblock %}
+
+
+{% block styles %}{% static 'dev/css/index.css' %}{% endblock %}
+
+
+{% block main %}
+    <div class="container myBots">
+        <h2 style="margin-bottom: 20px">Мои боты</h2>
+        {% for bot in bots %}
+            {% include 'dev/bot-link.html' %}
+        {% empty %}
+            У вас еще нет ботов, создайте первого!
+        {% endfor %}
+    </div>
+{% endblock %}

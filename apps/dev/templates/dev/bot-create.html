@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block title %}AlexFireChat-Dev{% endblock %}
+
+
+{% block buttons_main %}
+    {% include 'sidebar_buttons/home_deactive.html' %}
+    {% include 'sidebar_buttons/dev_deactive.html' %}
+{% endblock %}
+
+
+{% block style %}
+    <style>
+        .workplace {
+            margin-top: 20px;
+            margin-bottom: 5px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block main %}
+    <div class="container workplace">
+        <h2 style="margin-bottom: 20px">Создать бота</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% include 'forms/form_field_text.html' with label='Название' name=form.username.name maxlength=30 help_text=form.username.help_text errors=form.username.errors width='300px' %}
+            <button class="btn btn-primary" type="submit" style="margin-top: 30px">Создать</button>
+        </form>
+    </div>
+{% endblock %}

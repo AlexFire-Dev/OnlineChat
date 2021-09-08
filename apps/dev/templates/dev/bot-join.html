@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{{ bot.account.username }}-Dev{% endblock %}
+
+
+{% block buttons_main %}
+    {% include 'sidebar_buttons/home_deactive.html' %}
+    {% include 'sidebar_buttons/dev_deactive.html' %}
+{% endblock %}
+
+
+{% block main %}
+    <div class="container workplace">
+        <form method="get">
+            <h2 style="margin-bottom: 20px">Бот {{ bot.account.username }}</h2>
+
+            <select class="form-select" name="guild-select" aria-label="Default select example">
+                <option value="0">Выбери сервер</option>
+                {% for member in membership %}
+                    <option value="{{ member.guild.id }}">{{ member.guild.name }}</option>
+                {% endfor %}
+            </select>
+
+            <button style="margin-top: 25px" class="btn btn-primary" type="submit">Присоединиться</button>
+        </form>
+    </div>
+{% endblock %}

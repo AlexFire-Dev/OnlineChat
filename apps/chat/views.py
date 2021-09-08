@@ -105,3 +105,66 @@ class ChannelCreateView(CreateView):
 
         Channel.objects.create(**args)
         return HttpResponseRedirect(self.get_success_url())
+
+
+class GuildJoinView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('index')
+
+    def get(self, request, *args, **kwargs):
+        try:
+            link = InviteLink.objects.get(key=self.request.GET.get('join-input'))
+        except:
+            return HttpResponseRedirect(reverse('index'))
+        guild = link.guild
+        Member.objects.get_or_create(user=self.request.user, guild=guild)
+        member = Member.objects.get(user=self.request.user, guild=guild)
+        if member.banned:
+            return HttpResponseRedirect(reverse('index'))
+        member.active = True
+        member.save()
+
+        channel_layer = channels.layers.get_channel_layer()
+        username = member.user.username
+        if member.user.get_full_name():
+            username = member.user.get_full_name()
+        async_to_sync(channel_layer.group_send)(
+            f'guild_{guild.id}',
+            {
+                'type': 'chat_member_joined',
+                'member': {
+                    'id': member.id,
+                    'user': member.user.id,
+                    'username': username,
+                    'admin': member.admin,
+                    'bot': member.user.bot,
+                }
+            }
+        )
+
+        return super(GuildJoinView, self).get(self, request, *args, **kwargs)
+
+
+class GuildLeaveView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('index')
+
+    def get(self, request, *args, **kwargs):
+        guild = get_object_or_404(Guild, id=self.kwargs.get('guild'))
+        me = get_object_or_404(Member, guild=guild, user=self.request.user, active=True, banned=False)
+        me.active = False
+        me.admin = False
+        me.save()
+
+        channel_layer = channels.layers.get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'guild_{guild.id}',
+            {
+                'type': 'chat_member_left',
+                'member': {
+                    'id': me.id,
+                }
+            }
+        )
+
+        return super(GuildLeaveView, self).get(self, request, *args, **kwargs)

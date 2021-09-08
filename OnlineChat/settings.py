@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 
     'apps.chat',
     'apps.user',
+    'apps.dev',
 ]
 
 
@@ -77,8 +78,11 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-# Mail settings
+# Account activation code
+ACCOUNT_ACTIVATION_DAYS = 2
 
+# Mail settings
+AUTH_USER_EMAIL_UNIQUE = True
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', '465'))
 EMAIL_HOST_USER = os.getenv('EMAIL_USER')
@@ -86,6 +90,11 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 MIDDLEWARE = [

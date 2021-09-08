@@ -144,36 +144,36 @@ class GuildConsumer(AsyncWebsocketConsumer):
             },
         }))
 
-    # async def chat_member_joined(self, event):
-    #     await self.send(text_data=json.dumps({
-    #         'action': 'joined',
-    #         'member': {
-    #             'id': event['member']['id'],
-    #             'user': event['member']['user'],
-    #             'username': event['member']['username'],
-    #             'admin': event['member']['admin'],
-    #             'bot': event['member']['bot'],
-    #         },
-    #         'guild': {
-    #             'id': self.guild_id,
-    #         },
-    #     }))
-    #
-    # async def chat_member_left(self, event):
-    #     member = event['member']['id']
-    #
-    #     await self.send(text_data=json.dumps({
-    #         'action': 'left',
-    #         'member': {
-    #             'id': member,
-    #         },
-    #         'guild': {
-    #             'id': self.guild_id,
-    #         },
-    #     }))
-    #
-    #     if member == self.scope['member'].id:
-    #         await self.close()
+    async def chat_member_joined(self, event):
+        await self.send(text_data=json.dumps({
+            'action': 'joined',
+            'member': {
+                'id': event['member']['id'],
+                'user': event['member']['user'],
+                'username': event['member']['username'],
+                'admin': event['member']['admin'],
+                'bot': event['member']['bot'],
+            },
+            'guild': {
+                'id': self.guild_id,
+            },
+        }))
+
+    async def chat_member_left(self, event):
+        member = event['member']['id']
+
+        await self.send(text_data=json.dumps({
+            'action': 'left',
+            'member': {
+                'id': member,
+            },
+            'guild': {
+                'id': self.guild_id,
+            },
+        }))
+
+        if member == self.scope['member'].id:
+            await self.close()
 
     @database_sync_to_async
     def get_member(self, member_id):
@@ -219,14 +219,14 @@ class GuildConsumer(AsyncWebsocketConsumer):
     #         except:
     #             break
     #     return ids
-    #
-    # @database_sync_to_async
-    # def guild_creator(self):
-    #     try:
-    #         return self.scope['guild'].user
-    #     except:
-    #         return None
-    #
+
+    @database_sync_to_async
+    def guild_creator(self):
+        try:
+            return self.scope['guild'].user
+        except:
+            return None
+
     # @database_sync_to_async
     # def get_page(self, page: int):
     #     try:

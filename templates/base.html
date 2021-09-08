@@ -58,7 +58,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
                     {% if user.is_authenticated %}
-                        <li><a class="dropdown-item" href="#">Профиль</a></li>
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">Профиль</a></li>
                         <li><a class="dropdown-item" href="{% url 'guild-create' %}">Создать сервер</a></li>
                         {% block dropdown_extra %}{% endblock %}
 

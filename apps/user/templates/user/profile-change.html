@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load gravatar %}
+
+
+{% block buttons_main %}
+    {% include 'sidebar_buttons/home_deactive.html' %}
+{% endblock %}
+
+
+{% block main %}
+    <form class="container" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <h2 style="margin-top: 25px">Редактировать профиль</h2>
+        <br>
+        {% include 'forms/form_field_file.html' with label='Сменить аватар' name=form.avatar.name width='300px' %}
+        {% if user.avatar %}
+            {% include 'forms/form_field_check.html' with label='Удалить аватар' name='avatar-clear' %}
+        {% endif %}
+        <br>
+        <div class="row">
+            {% with 'col-sm-6' as classes %}
+                {% include 'forms/form_field_text.html' with label=form.first_name.label name=form.first_name.name value=form.first_name.value nonrequired=True %}
+                {% include 'forms/form_field_text.html' with label=form.last_name.label name=form.last_name.name value=form.last_name.value nonrequired=True %}
+            {% endwith %}
+        </div>
+        <br>
+            {% include 'forms/form_field_switch.html' with label='Использовать граватар' name=form.use_gravatar.name value=form.use_gravatar.value %}
+        <br>
+        <div class="main__form" style="margin-top: 30px; margin-bottom: 15px">
+            <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Сохранить</button>
+            <a href="{% gravatar_profile_url user.email %}" class="btn btn-warning" style="margin-right: 10px;">Граватар</a>
+            <a href="{% url 'profile' %}" class="btn btn-secondary">Назад</a>
+        </div>
+    </form>
+{% endblock %}

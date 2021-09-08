@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{{ bot.account.username }}-Developer{% endblock %}
+
+
+{% block buttons_main %}
+    {% include 'sidebar_buttons/home_deactive.html' %}
+    {% include 'sidebar_buttons/dev_deactive.html' %}
+{% endblock %}
+
+
+{% block styles %}{% static 'dev/css/bot-change.css' %}{% endblock %}
+
+
+{% block main %}
+    <div class="container workplace">
+        <h2 style="margin-bottom: 20px">Редактировать бота</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% include 'forms/form_field_text.html' with label='Название' value=form.username.value name=form.username.name help_text=form.username.help_text errors=form.username.errors width='300px' %}
+            <div style="margin-top: 30px; display: flex">
+                <button class="btn btn-primary" type="submit" style="margin-right: 10px">Сохранить</button>
+                <button type="button" class="btn btn-danger" onclick="deleteModal.show()">Удалить</button>
+            </div>
+        </form>
+
+        <!-- HTML-код модального окна -->
+        <div class="modal fade" id="deleteModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Удалить бота</h5>
+                        <button type="button" class="btn-close" onclick="deleteModal.hide()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Вы уверены? Это действие нельзя отменить!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="deleteModal.hide()">Отменить</button>
+                        <a href="{% url 'bot-delete' bot.id %}" class="btn btn-danger">Удалить бота</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'dev/js/bot-change.js' %}"></script>
+{% endblock %}
