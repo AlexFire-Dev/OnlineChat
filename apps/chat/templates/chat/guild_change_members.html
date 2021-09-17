@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{{ guild.name }}{% endblock %}
+
+
+{% block buttons_main %}
+    {% include 'sidebar_buttons/home_deactive.html' %}
+{% endblock %}
+
+
+{% block buttons_channels %}
+    {% include 'chat/sidebar_buttons/guild_redirect.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_main_deactive.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_channels_deactive.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_members_active.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_bans_deactive.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_links_deactive.html' with guild=guild %}
+{% endblock %}
+
+
+{% block main %}
+    <div class="container body__scroll">
+        <h2 style="margin-bottom: 25px; margin-top: 20px">Настройки сервера</h2>
+
+        <div id="members-list">
+            {% for member in members %}
+                {% include 'chat/member_info.html' %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script>
+    const guildId = {{ guild.id }};
+    const user_id = {{ user.id }};
+    const guild_creator_id = {{ guild.creator.id }};
+    </script>
+
+    <script src="{% static 'chat/js/guild_change_members.js' %}"></script>
+{% endblock %}

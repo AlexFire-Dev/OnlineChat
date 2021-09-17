@@ -1,0 +1,18 @@
+<div id="id_{{ member.id }}" class="card" style="margin-top: 10px; margin-bottom: 5px">
+    <div class="card-header">
+        {% if member.user.get_full_name %}{{ member.user.get_full_name }}{% else %}{{ member.user.username }}{% endif %}
+    </div>
+    <div class="card-body" style="height: 70px">
+        <div style="display: flex; justify-content: space-between; align-items: center; height: 38px">
+            <div>
+                {% include 'forms/form_field_check.html' with disabled=True value=member.admin label='Администратор' name='admin_check' %}
+                {% include 'forms/form_field_check.html' with disabled=True value=member.user.bot label='Бот' name='bot_check' %}
+            </div>
+            {% if not member.admin %}
+                <a href="{% url 'guild-member-update' guild.id member.id %}" class="btn btn-success">Редактировать</a>
+            {% elif user == guild.creator and member.user != user %}
+                <a href="{% url 'guild-member-update' guild.id member.id %}" class="btn btn-success">Редактировать</a>
+            {% endif %}
+        </div>
+    </div>
+</div>

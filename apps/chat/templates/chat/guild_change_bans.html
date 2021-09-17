@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{ guild.name }}{% endblock %}
+
+
+{% block buttons_main %}
+    {% include 'sidebar_buttons/home_deactive.html' %}
+{% endblock %}
+
+
+{% block buttons_channels %}
+    {% include 'chat/sidebar_buttons/guild_redirect.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_main_deactive.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_channels_deactive.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_members_deactive.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_bans_active.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_links_deactive.html' with guild=guild %}
+{% endblock %}
+
+
+{% block main %}
+    <div class="container">
+        <h2 style="margin-bottom: 25px; margin-top: 20px">Настройки сервера</h2>
+
+        <div>
+            {% for member in members %}
+                {% include 'chat/ban_info.html' %}
+            {% empty %}
+                Никто не забанен!
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

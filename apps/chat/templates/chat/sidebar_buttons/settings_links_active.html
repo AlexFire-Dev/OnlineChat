@@ -1,0 +1,13 @@
+{% load static %}
+
+<li>
+    <a href="{% url 'guild-change-links' guild.id %}" class="nav-link active">
+        <img
+                width="16" height="16"
+                class="me-2"
+                src="{% static 'chat/images/settings.svg' %}"
+                alt="channel"
+        />
+        Приглашения
+    </a>
+</li>

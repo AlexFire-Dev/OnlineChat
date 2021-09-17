@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{{ guild.name }}{% endblock %}
+
+
+{% block buttons_main %}
+    {% include 'sidebar_buttons/home_deactive.html' %}
+{% endblock %}
+
+
+{% block buttons_channels %}
+    {% include 'chat/sidebar_buttons/guild_redirect.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_main_deactive.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_channels_deactive.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_members_deactive.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_bans_deactive.html' with guild=guild %}
+    {% include 'chat/sidebar_buttons/settings_links_active.html' with guild=guild %}
+{% endblock %}
+
+
+{% block styles %}{% static 'chat/css/guild_change_links.css' %}{% endblock %}
+
+
+{% block main %}
+    <div class="container">
+        <h2 style="margin-bottom: 25px; margin-top: 20px">Настройки сервера</h2>
+
+        <div>
+            {% for link in links %}
+                {% include 'chat/link_info.html' %}
+            {% empty %}
+                <p>Кодов приглашения ещё нет :(</p>
+            {% endfor %}
+        </div>
+
+        <a href="{% url 'generate-invite-link' guild.id %}" class="btn btn-success" style="margin-top: 10px; margin-bottom: 5px">Сгенерировать новый код</a>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'chat/js/guild_change_links.js' %}"></script>
+{% endblock %}

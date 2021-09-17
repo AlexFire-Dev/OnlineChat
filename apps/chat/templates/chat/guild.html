@@ -45,7 +45,10 @@
 {% block dropdown_extra %}
     {% if member.admin %}
         <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="{% url 'channel-create' guild.id %}">Создать канал</a></li>
+        <li><a class="dropdown-item" href="{% url 'guild-change-main' guild.id %}">Настройки сервера</a></li>
+    {% elif member.user != guild.creator %}
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{% url 'guild-leave' guild.id %}">Покинуть сервер</a></li>
     {% endif %}
 {% endblock %}
 

@@ -16,5 +16,34 @@
         {% for member in membership %}
             {% include 'chat/guild_link.html' with id=member.guild.id title=member.guild.name poster=member.guild.poster %}
         {% endfor %}
+
+        <!-- HTML-код модального окна -->
+        <div class="modal fade" id="joinModal">
+            <div class="modal-dialog">
+                <form method="get" action="{% url 'guild-join' %}" class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Присоединится к серверу</h5>
+                        <button type="button" class="btn-close" onclick="joinModal.hide()"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% include 'forms/form_field_text.html' with placeholder='Код приглашения' name='join-input' maxlength=30 width='100%' %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Вступить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+{% endblock %}
+
+
+{% block dropdown_extra %}
+    <li><hr class="dropdown-divider"></li>
+    <li><button type="button" class="dropdown-item" onclick="modalOpen()">Присоединится к серверу</button></li>
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'chat/js/index.js' %}"></script>
 {% endblock %}

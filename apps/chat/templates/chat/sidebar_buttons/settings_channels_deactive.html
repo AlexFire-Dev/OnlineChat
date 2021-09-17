@@ -1,0 +1,13 @@
+{% load static %}
+
+<li>
+    <a href="{% url 'guild-change-channels' guild.id %}" class="nav-link text-white">
+        <img
+                width="16" height="16"
+                class="me-2"
+                src="{% static 'chat/images/settings.svg' %}"
+                alt="channel"
+        />
+        Каналы
+    </a>
+</li>

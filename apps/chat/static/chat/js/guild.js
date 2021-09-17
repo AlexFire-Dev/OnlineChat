@@ -11,7 +11,7 @@ const guildSocket = new WebSocket(
 );
 
 guildSocket.onclose = function (e) {
-    // document.location.href = redirect_url;
+    document.location.href = redirect_url;
 };
 
 guildSocket.onopen = function (e) {

@@ -1,0 +1,15 @@
+<div class="card" style="margin-top: 10px; margin-bottom: 5px">
+    <div class="card-header">
+        {{ channel.name }}
+    </div>
+    <div class="card-body" style="height: 70px">
+        <div style="display: flex; justify-content: space-between; align-items: center; height: 38px">
+            <div>
+                {% include 'forms/form_field_check.html' with disabled=True value=channel.private label='Приватный' name='private_check' %}
+            </div>
+            {% if channels_count > 1 or channel.private %}
+                <a href="{% url 'channel-delete' guild.id channel.id %}" class="btn btn-danger">Удалить</a>
+            {% endif %}
+        </div>
+    </div>
+</div>

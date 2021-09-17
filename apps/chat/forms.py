@@ -13,3 +13,15 @@ class CreateChannelForm(forms.ModelForm):
     class Meta:
         model = Channel
         fields = ('name', 'private')
+
+
+class UpdateGuildForm(forms.ModelForm):
+    class Meta:
+        model = Guild
+        fields = ('name', 'poster')
+
+
+class UpdateMemberForm(forms.ModelForm):
+    class Meta:
+        model = Member
+        fields = ('admin',)
